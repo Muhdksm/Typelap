@@ -658,6 +658,18 @@
   <a href="privacy.html">Privacy Policy</a> |
   <a href="contact.html">Contact</a>
 </footer>
+<script>
+  // Check if cookies were already accepted
+  if (!localStorage.getItem('cookiesAccepted')) {
+    document.getElementById('cookie-banner').style.display = 'flex';
+  }
+
+  // When user clicks allow
+  document.getElementById('accept-cookies').addEventListener('click', function() {
+    localStorage.setItem('cookiesAccepted', 'true');
+    document.getElementById('cookie-banner').style.display = 'none';
+  });
+</script>
 
 <script src="script.js"></script>
 </body>

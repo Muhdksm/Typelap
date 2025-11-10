@@ -1,0 +1,502 @@
+/* --- 
+   Typelap: Light Mode (Mockup) Theme
+   --- */
+
+/* --- 1. Root Variables & Body --- */
+:root {
+    --main-bg: #f7f7f7;
+    --main-txt: #222;
+    --container-bg: #ffffff;
+    --container-border: #e0e0e0;
+    --input-bg: #f5f5ff;
+    --timer-bg: #eef4ff;
+    --accent: #0099ff;
+    --success: #00cc77;
+    --error: #ff4444;
+    --font-main: 'Segoe UI', Arial, sans-serif;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--main-bg);
+    color: var(--main-txt);
+    margin: 0;
+    padding-top: 60px; /* Space for fixed header */
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* --- 2. Dark Mode Theme --- */
+body.dark {
+    --main-bg: #1A2238;
+    --main-txt: #E0E0E0;
+    --container-bg: #202A44;
+    --container-border: #2a3657;
+    --input-bg: #1A2238;
+    --timer-bg: #2a3657;
+    --shadow: 0 4px 20px rgba(0, 255, 255, 0.05);
+}
+
+/* --- 3. Header & Navigation --- */
+.navbar {
+    background-color: var(--container-bg);
+    border-bottom: 1px solid var(--container-border);
+    box-shadow: var(--shadow);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+}
+.navbar-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.logo h1 {
+    font-size: 1.5rem;
+    color: var(--main-txt);
+    margin: 0;
+}
+.avatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background: #e3e3ff;
+}
+.main-nav {
+    display: flex;
+    gap: 1.5rem;
+}
+.main-nav a {
+    text-decoration: none;
+    color: var(--main-txt);
+    font-weight: 600;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+.main-nav a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+.header-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.streak {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--error);
+    background-color: #ffe8e8;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+}
+body.dark .streak {
+    background-color: #4d2a2a;
+    color: #ffb1b1;
+}
+
+/* NEW: Hero/Introduction Section 
+*/
+.hero-section {
+    text-align: center;
+    padding: 2rem 1rem 1rem 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.hero-section h2 {
+    font-size: 2rem;
+    color: var(--main-txt);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+.hero-section p {
+    font-size: 1.1rem;
+    color: var(--main-txt);
+    opacity: 0.8;
+    margin: 0;
+}
+
+
+/* --- 4. Main Container & Stats --- */
+.container {
+    max-width: 900px;
+    margin: 1rem auto 2rem auto; /* Reduced top margin */
+    padding: 2rem;
+    background-color: var(--container-bg);
+    border: 1px solid var(--container-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+.stats span {
+    background-color: var(--timer-bg);
+    color: var(--main-txt);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: var(--timer-bg);
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+.progress-inner {
+    width: 0;
+    height: 100%;
+    background-color: var(--accent);
+    border-radius: 5px;
+    transition: width 0.25s;
+}
+
+/* --- 5. Typing Area --- */
+.typing-area {
+    background-color: var(--input-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    line-height: 2;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+    user-select: none;
+}
+.typing-area span.correct { color: var(--success); }
+.typing-area span.incorrect { color: var(--error); background: #ffeded; }
+.typing-area span.current { background-color: var(--accent); color: #fff; border-radius: 4px; }
+body.dark .typing-area span.incorrect { background-color: #5d2f2f; }
+.caps-warning {
+    display: none;
+    color: #fff;
+    background-color: var(--error);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.input-area {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    border: 2px solid var(--container-border);
+    background-color: var(--container-bg);
+    color: var(--main-txt);
+    box-sizing: border-box; /* Important */
+    transition: border-color 0.2s;
+}
+.input-area:disabled {
+    background-color: var(--main-bg);
+}
+.input-area:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* --- 6. Controls & Buttons --- */
+.controls, .feature-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+fieldset {
+    border: 1px solid var(--container-border);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 0;
+}
+legend {
+    font-weight: 700;
+    padding: 0 0.5rem;
+    color: var(--main-txt);
+}
+/* Base Button */
+button, select {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid var(--container-border);
+    background-color: var(--container-bg);
+    color: var(--main-txt);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+button:hover, select:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+select {
+    min-width: 80px;
+}
+/* Primary Button */
+.btn-primary {
+    background-color: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+.btn-primary:hover {
+    background-color: #007bbd;
+    border-color: #007bbd;
+    color: #fff;
+}
+/* Icon Button */
+.action-btn-icon {
+    font-size: 1.2rem;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+/* Feature Button */
+.feature-btn {
+    background-color: var(--timer-bg);
+    border-color: var(--timer-bg);
+}
+.feature-btn:hover {
+    background-color: #dbeaff;
+    border-color: #dbeaff;
+    color: var(--accent);
+}
+
+/* --- 7. Contextual/Hidden Areas --- */
+.custom-text-area {
+    width: 100%;
+    min-height: 80px;
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid var(--container-border);
+    background-color: var(--container-bg);
+    color: var(--main-txt);
+    box-sizing: border-box;
+    display: none; /* Hidden by default */
+}
+.code-practice-area {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--container-border);
+    border-radius: 8px;
+    display: none; /* Hidden by default */
+}
+.code-practice-area pre {
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+.code-practice-area #codeOutput {
+    background-color: var(--input-bg);
+    min-height: 40px;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-family: monospace;
+}
+.theme-chooser {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 10px;
+}
+.theme-btn {
+    background-color: var(--timer-bg);
+    border: 2px solid transparent;
+}
+.theme-btn.selected {
+    border-color: var(--accent);
+}
+
+/* --- 8. Ad & Results Grid --- */
+.ad-container {
+    margin: 1.5rem 0;
+    min-height: 100px;
+    background: var(--input-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    border-radius: 8px;
+}
+.results-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+.results-col h3 {
+    margin-top: 0;
+}
+.mistyped-words span {
+    color: var(--error);
+    background: #ffeded;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-right: 5px;
+    line-height: 2;
+}
+body.dark .mistyped-words span {
+    background: #5d2f2f;
+}
+.chart {
+    width: 100%;
+    min-height: 120px;
+    background: var(--input-bg);
+    border-radius: 8px;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+#wpmChart {
+    width: 100%;
+}
+.leaderboard {
+    background-color: var(--timer-bg);
+    border-radius: 8px;
+    padding: 1rem;
+}
+.leaderboard ol {
+    padding-left: 1.5rem;
+    margin: 0;
+}
+.leaderboard li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--container-border);
+}
+.leaderboard li:last-child {
+    border-bottom: none;
+}
+
+/* --- 9. Virtual Keyboard --- */
+.virtual-keyboard {
+    background: var(--timer-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1.5rem auto;
+}
+.vk-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+.vk-key {
+    background: #fff;
+    color: #333;
+    border: none;
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 4px;
+    font-size: 1rem;
+    min-width: 40px;
+    text-align: center;
+}
+.vk-key:hover { background: #eee; }
+.vk-key.active { background: var(--accent); color: #fff; }
+.vk-key-space { flex: 1; }
+.vk-key-backspace { background: #ffe8e8; color: var(--error); }
+body.dark .vk-key { background: #444; color: #fff; }
+body.dark .vk-key:hover { background: #555; }
+body.dark .vk-key.active { background: var(--accent); color: #fff; }
+body.dark .vk-key-backspace { background: #5d2f2f; color: #ffb1b1; }
+
+
+/* --- 10. Overlays & Modals --- */
+.motivational {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background-color: var(--success);
+    color: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 204, 119, 0.3);
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: translateX(20px);
+}
+.motivational.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+.modal-overlay, .distraction-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content, .distraction-content {
+    background: var(--container-bg);
+    padding: 2rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+}
+.distraction-overlay {
+    background: var(--main-bg);
+}
+.distraction-content {
+    max-width: 900px;
+}
+.distraction-content button {
+    margin-top: 1rem;
+}
+
+/* --- 11. Footer --- */
+.main-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 2rem;
+}
+
+/* --- 12. Responsive --- */
+@media (max-width: 768px) {
+    body { padding-top: 0; }
+    .navbar { position: static; }
+    .navbar-container { flex-direction: column; height: auto; padding: 1rem; }
+    .main-nav { margin-top: 1rem; }
+    .container { padding: 1rem; }
+    .hero-section { padding: 1rem; }
+    .stats { justify-content: center; }
+    .stats span { font-size: 0.8rem; padding: 0.4rem 0.6rem; }
+    .typing-area { font-size: 1.2rem; }
+    .controls, .feature-bar { flex-direction: column; gap: 0.5rem; }
+    fieldset { margin-bottom: 0.5rem; }
+    .results-grid { grid-template-columns: 1fr; }
+}

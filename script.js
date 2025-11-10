@@ -1,3 +1,331 @@
+// Wait for the DOM to be fully loaded before running any scripts
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- 1. ELEMENT SELECTORS ---
+
+    // Header
+    const themeBtn = document.getElementById('themeBtn');
+    const streakCounter = document.getElementById('streakCounter');
+    const avatar = document.getElementById('avatar');
+
+    // Main Stats
+    const wpmDisplay = document.getElementById('wpmDisplay');
+    const accDisplay = document.getElementById('accDisplay');
+    const errDisplay = document.getElementById('errDisplay');
+    const timerDisplay = document.getElementById('timerDisplay');
+
+    // Typing Area
+    const typingArea = document.getElementById('typingArea');
+    const hiddenInput = document.getElementById('hiddenInput');
+    const capsLockWarning = document.getElementById('capsLockWarning');
+
+    // Main Controls
+    const durationGroup = document.querySelector('.control-group[data-type="duration"]');
+    const difficultyGroup = document.querySelector('.control-group[data-type="difficulty"]');
+    const langGroup = document.querySelector('.control-group[data-type="lang"]');
+    
+    // Main Actions
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resumeBtn = document.getElementById('resumeBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const repeatBtn = document.getElementById('repeatBtn');
+
+    // Feature Bar
+    const dailyChallengeBtn = document.getElementById('dailyChallengeBtn');
+    const customTextBtn = document.getElementById('customTextBtn');
+    const mistakeReviewBtn = document.getElementById('mistakeReviewBtn');
+    const focusTimerBtn = document.getElementById('focusTimerBtn');
+    const closeMistakeModalBtn = document.getElementById('closeMistakeModalBtn');
+    const distractionFreeBtn = document.getElementById('distractionFreeBtn');
+    const soundBtn = document.getElementById('soundBtn');
+    const keyboardBtn = document.getElementById('keyboardBtn');
+    const streakBtn = document.getElementById('streakBtn');
+    const leaderboardBtn = document.getElementById('leaderboardBtn');
+    const sessionReplayBtn = document.getElementById('sessionReplayBtn');
+    const exportBtn = document.getElementById('exportBtn');
+
+    // Contextual Elements
+    const customTextWrapper = document.getElementById('customTextWrapper');
+    const customTextArea = document.getElementById('customTextArea');
+    const useCustomTextBtn = document.getElementById('useCustomTextBtn');
+    const virtualKeyboard = document.getElementById('virtualKeyboard');
+    
+    // Results
+    const wpmChartCanvas = document.getElementById('wpmChart');
+    const mistypedList = document.getElementById('mistypedList');
+
+
+    // --- 2. APP STATE ---
+    let testActive = false;
+    let timer;
+    let wpmHistory = []; // For the chart
+    let currentSettings = {
+        duration: 30,
+        difficulty: 'medium',
+        lang: 'en'
+    };
+
+    // --- 3. EVENT LISTENERS ---
+
+    // --- Core Test Actions ---
+    startBtn.addEventListener('click', startTest);
+    resetBtn.addEventListener('click', resetTest);
+    // --- ADD LISTENERS FOR PAUSE, RESUME, REPEAT ---
+    // pauseBtn.addEventListener('click', pauseTest);
+    // resumeBtn.addEventListener('click', resumeTest);
+    // repeatBtn.addEventListener('click', repeatTest);
+
+    // --- Input Handling ---
+    // Focus the hidden input when the user clicks the typing area
+    typingArea.addEventListener('click', () => hiddenInput.focus());
+
+    // Main input listener
+    hiddenInput.addEventListener('input', handleTyping);
+
+    // Check for Caps Lock
+    hiddenInput.addEventListener('keydown', (e) => {
+        const capsOn = e.getModifierState && e.getModifierState('CapsLock');
+        capsLockWarning.classList.toggle('hidden', !capsOn);
+    });
+
+    // --- Main Control Toggles (Duration, Difficulty, Language) ---
+    // We use one handler for all control groups
+    document.querySelectorAll('.control-group').forEach(group => {
+        group.addEventListener('click', (e) => {
+            if (e.target.classList.contains('control-btn')) {
+                // 1. Remove 'active' from all buttons in this group
+                group.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+                
+                // 2. Add 'active' to the clicked button
+                e.target.classList.add('active');
+                
+                // 3. Update settings object
+                const type = e.target.dataset.type;
+                const value = e.target.dataset.value;
+                currentSettings[type] = value;
+                
+                console.log('Settings updated:', currentSettings);
+                // You can now reset the test with new settings, e.g., loadNewText()
+            }
+        });
+    });
+
+    // --- Feature Toggles ---
+
+    // Theme Toggle
+    themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme'); // You'll need to create this class in CSS
+        // Save preference
+        if (document.body.classList.contains('dark-theme')) {
+            localStorage.setItem('theme', 'dark');
+            themeBtn.textContent = '☀️';
+        } else {
+            localStorage.setItem('theme', 'light');
+            themeBtn.textContent = '🌙'; // Or your dark mode icon
+        }
+    });
+
+    // Custom Text Area Toggle
+    customTextBtn.addEventListener('click', () => {
+        customTextWrapper.classList.toggle('hidden');
+        customTextBtn.classList.toggle('active');
+    });
+
+    // Virtual Keyboard Toggle
+    keyboardBtn.addEventListener('click', () => {
+        virtualKeyboard.classList.toggle('hidden');
+        keyboardBtn.classList.toggle('active');
+    });
+    
+    // Sound Toggle
+    soundBtn.addEventListener('click', () => {
+        soundBtn.classList.toggle('active');
+        // --- ADD YOUR SOUND ON/OFF LOGIC HERE ---
+        const soundOn = soundBtn.classList.contains('active');
+        soundBtn.textContent = soundOn ? '🔊 Sound On' : '🔇 Sound Off';
+    });
+
+    // --- ADD LISTENERS FOR YOUR OTHER FEATURE BUTTONS ---
+    // dailyChallengeBtn.addEventListener('click', () => { ... });
+    // mistakeReviewBtn.addEventListener('click', () => { ... });
+    // focusTimerBtn.addEventListener('click', () => { ... });
+    // distractionFreeBtn.addEventListener('click', () => { ... });
+    // exportBtn.addEventListener('click', () => { ... });
+
+
+    // --- 4. CORE FUNCTIONS ---
+
+    function startTest() {
+        console.log('Starting test with settings:', currentSettings);
+        testActive = true;
+        // --- ADD YOUR START LOGIC HERE ---
+        // 1. Get text (from API or local array) based on settings
+        // 2. Populate typingArea
+        // 3. Reset stats (WPM, errors, etc.)
+        // 4. Start the timer countdown
+        // 5. Focus the hidden input
+        hiddenInput.focus();
+        hiddenInput.value = '';
+        
+        // Example:
+        // loadText();
+        // startTimer(currentSettings.duration);
+        
+        // Show/hide action buttons
+        startBtn.classList.add('hidden');
+        pauseBtn.classList.remove('hidden');
+        resetBtn.classList.remove('hidden');
+    }
+
+    function resetTest() {
+        console.log('Resetting test');
+        testActive = false;
+        clearInterval(timer);
+        
+        // --- ADD YOUR RESET LOGIC HERE ---
+        // 1. Clear stats
+        wpmDisplay.textContent = '0';
+        accDisplay.textContent = 'Accuracy: 100%';
+        errDisplay.textContent = 'Errors: 0';
+        timerDisplay.textContent = `Time: 00:${currentSettings.duration}`;
+        
+        // 2. Reset typing area to placeholder
+        typingArea.innerHTML = '<span>c</span><span>l</span><span>i</span><span>c</span><span>k</span>&nbsp;<span>s</span><span>t</span><span>a</span><span>r</span><span>t</span>';
+        
+        // 3. Reset buttons
+        startBtn.classList.remove('hidden');
+        pauseBtn.classList.add('hidden');
+        resumeBtn.classList.add('hidden');
+        resetBtn.classList.add('hidden');
+    }
+
+    function handleTyping(e) {
+        if (!testActive) return;
+
+        // --- THIS IS WHERE YOUR CORE TYPING LOGIC GOES ---
+        console.log('User typed:', e.target.value);
+        
+        // 1. Get the current word/character from typingArea
+        // 2. Compare with user input
+        // 3. Apply .correct or .incorrect classes to spans in typingArea
+        // 4. Update WPM, Accuracy, and Error stats
+        
+        // Example (very simplified):
+        // const currentText = "example";
+        // const typedValue = e.target.value;
+        // if (currentText.startsWith(typedValue)) {
+        //     updateWPM();
+        // } else {
+        //     // Handle error
+        // }
+    }
+    
+    function updateWPM() {
+        // --- ADD YOUR WPM CALCULATION LOGIC ---
+        // const grossWPM = (allTypedEntries / 5) / (timeElapsedInMinutes);
+        // wpmDisplay.textContent = calculatedWPM;
+    }
+
+    function testFinished() {
+        console.log('Test finished');
+        testActive = false;
+        clearInterval(timer);
+        
+        // --- ADD YOUR TEST FINISHED LOGIC ---
+        // 1. Do final WPM/Accuracy calculation
+        // 2. Add final WPM to wpmHistory array
+        // 3. Update the chart
+        // 4. Show leaderboard or results modal
+        
+        // Example:
+        // const finalWPM = parseInt(wpmDisplay.textContent);
+        // wpmHistory.push(finalWPM);
+        // updateChart();
+        
+        // Show/hide buttons
+        startBtn.classList.add('hidden');
+        resetBtn.classList.remove('hidden');
+        repeatBtn.classList.remove('hidden');
+        pauseBtn.classList.add('hidden');
+    }
+
+
+    // --- 5. CHART.JS SETUP ---
+    
+    // Check if Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not loaded. The WPM chart will not work.');
+        return;
+    }
+    
+    // Chart.js global config for dark mode
+    Chart.defaults.color = 'rgba(160, 160, 224, 0.7)'; // --text-mid
+    Chart.defaults.borderColor = 'rgba(42, 54, 87, 0.5)'; // #2a3657
+
+    const chartCtx = wpmChartCanvas.getContext('2d');
+    const wpmChart = new Chart(chartCtx, {
+        type: 'line',
+        data: {
+            labels: [], // Will be populated
+            datasets: [{
+                label: 'WPM',
+                data: [], // Will be populated
+                borderColor: '#00FFFF', // --accent-cyan
+                backgroundColor: 'rgba(0, 255, 255, 0.1)',
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: '#00FFFF'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'WPM'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Test #'
+                    }
+                }
+            }
+        }
+    });
+
+    function updateChart() {
+        wpmChart.data.labels = wpmHistory.map((_, i) => i + 1); // [1, 2, 3...]
+        wpmChart.data.datasets[0].data = wpmHistory;
+        wpmChart.update();
+    }
+
+
+    // --- 6. INITIALIZATION ---
+    function init() {
+        console.log('Typelap app initialized.');
+        // Load preferences
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeBtn.textContent = '☀️';
+        }
+        
+        // Reset test to initial state
+        resetTest();
+    }
+
+    init(); // Run the app
+});
 const textSamples = {
   en: {
     easy: [
@@ -400,6 +728,7 @@ document.getElementById('duration').onchange = (e)=>{duration = parseInt(e.targe
 document.getElementById('difficulty').onchange = (e)=>{difficulty = e.target.value;resetSession();}
 document.getElementById('language').onchange = (e)=>{language = e.target.value;resetSession();}
 
+
 /* ----------- Keyboard Shortcuts ----------- */
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.key === 's') { e.preventDefault(); startSession(); }
@@ -430,6 +759,8 @@ themeBtns.forEach(btn => {
     }
   };
 });
+
+closeMistakeModalBtn.onclick = () => closeMistakeReview();
 
 /* ----------- Dark/Light Mode ----------- */
 function toggleDarkMode() {

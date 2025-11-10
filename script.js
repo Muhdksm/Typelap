@@ -1147,12 +1147,22 @@ document.getElementById('exitCodePracticeBtn').onclick = () => {
 };
 
 // --- Update renderTypingText for code mode ---
+// Escapes HTML meta-characters to prevent XSS from user input
+function escapeHTML(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 const origRenderTypingText = renderTypingText;
 window.renderTypingText = function() {
   if (codePracticeMode) {
     typingArea.innerHTML = `<pre style="font-family:monospace;background:#222;color:#fff;border-radius:8px;padding:8px;white-space:pre-wrap;">${typingTextArr.map((ch, i) => {
       let cls = i === currentIndex ? 'current' : i < currentIndex ? (inputArea.value[i] === typingTextArr[i] ? 'correct' : 'incorrect') : '';
-      return `<span class="${cls}">${ch === '\n' ? '<br>' : ch}</span>`;
+      return `<span class="${cls}">${ch === '\n' ? '<br>' : escapeHTML(ch)}</span>`;
     }).join('')}</pre>`;
   } else {
     origRenderTypingText();
